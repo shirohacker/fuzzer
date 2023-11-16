@@ -46,6 +46,10 @@ func runAFL(fuzzingPath string, fuzzerNumber int) {
 		createScript(fuzzingPath, i)
 		createSeed(fuzzingPath, i)
 
+		u, _ := url.Parse(fuzzStat.Targets[i].TargetPath)
+		os.Setenv("SCRIPT_FILENAME", "/app" + u.Path)
+		fmt.Println("SCRIPT_FILENAME" + "/app" + u.Path)
+
 		// cmd := exec.Command("sh", fuzzingPath + "/run.sh")
 		cmd := exec.Command(script[1], script[2:]...)
 		stdout, _ := cmd.StdoutPipe()
@@ -248,7 +252,7 @@ func createFuzzStat(fuzzingPath string) {
 	fuzzStat.Targets = []fuzzTarget{}
 
 	for key, value := range requestData.RequestsFound {
-		targetURL := strings.Split(value.URL, "?")[0]
+		targetURL := strings.Split(value.URLString, "?")[0]
 		method := strings.Split(key, " ")[0]
 		_, exist := uniqCheck[targetURL]
 
@@ -263,7 +267,7 @@ func createFuzzStat(fuzzingPath string) {
 				Methods: make(map[string]int),
 			}
 
-			tempFuzzTarget.TargetPath = strings.Split(value.URL, "?")[0]
+			tempFuzzTarget.TargetPath = strings.Split(value.URLString, "?")[0]
 			tempFuzzTarget.Requests = append(tempFuzzTarget.Requests, key)
 			tempFuzzTarget.Methods[method] = 1
 

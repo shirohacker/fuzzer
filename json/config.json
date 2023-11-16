@@ -1,23 +1,23 @@
 {
     "testname": "test",
-    "afl_path": "/afl",
-    "target_binary": "/httpreqr --json --url ",
-    "base_url": "http://localhost:@@PORT_INCREMENT@@/",
-    "base_port": 3000,
-    "timeout" : 60,
+    "afl_path": "/afl/",
+    "target_binary": "/usr/local/bin/php-cgi ",
+    "base_url": "http://localhost:{PORT}",
+    "base_port": 80,
+    "timeout" : 200,
     "ld_library_path": "/lib",
     "ld_preload": "/lib/hook_recv.so",
     "memory": "8G",
     "first_crash": true,
     "cores": 1,
     "login": {
-        "url": "http://localhost",
-        "port": 3000,
-        "postData": "id=admin&pw=admin",
+        "url": "http://localhost/login.php",
+        "port": 80,
+        "postData": "username=admin&password=admin&&Login=Login",
         "getData": "id=guest&pw=guest",
-        "positiveHeaders": {"content-type": "Application/json"},
+        "positiveHeaders": {"content-type": "application/x-www-form-urlencoded"},
         "positiveBody": "",
         "method": "POST",
-        "loginSessionCookie" : ""
+        "loginSessionCookie" : "PHPSESSID"
     }
 }
